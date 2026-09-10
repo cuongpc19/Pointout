@@ -10,6 +10,8 @@
     --text:#e8ecf8; --dim:#8792b5; --accent:#ffc315;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  /* every display:flex rule below would otherwise beat the hidden attribute */
+  [hidden]{display:none!important}
   html,body{height:100%}
   body{
     margin:0;background:var(--bg);color:var(--text);
@@ -1188,7 +1190,8 @@ function showDaily(){
 }
 function claimDaily(){
   const st=dailyState();
-  if(!st.claimable){ el('daily').hidden=true; return; }
+  // the level gate is checked here too, not just where the button is drawn
+  if(!st.claimable || (progress().best||0)<DAILY_FROM){ el('daily').hidden=true; return; }
   const r=DAILY[st.day-1];
   const p=progress();
   p.coins=(p.coins||0)+r.coins;
