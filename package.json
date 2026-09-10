@@ -1,0 +1,10 @@
+{
+  "name": "point-out-color-escape",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Point Out: Color Escape — HTML5 remake, 6740 levels extracted from the original APK",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  }
+}
