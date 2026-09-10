@@ -27,9 +27,6 @@
   header{display:flex;align-items:center;gap:8px;padding:10px 0 6px;flex:0 0 auto}
   .pill{background:var(--panel);border-radius:14px;padding:8px 14px;display:flex;align-items:center;gap:10px}
   #lvlLabel{font-weight:800;letter-spacing:.4px;font-size:15px}
-  #stars{display:flex;gap:3px}
-  .star{width:16px;height:16px;color:var(--accent)}
-  .star.off{color:#3b4467}
   .btn{background:var(--panel);border:0;color:var(--text);border-radius:12px;
        padding:9px 12px;font:inherit;font-weight:700;cursor:pointer;display:flex;
        align-items:center;justify-content:center;gap:6px;min-width:42px;height:40px}
@@ -37,13 +34,11 @@
   .btn:disabled{opacity:.35;cursor:default}
   .btn.primary{background:var(--accent);color:#2b2200}
   .spacer{flex:1}
+  .coinPill{padding:8px 14px;font-weight:800}
 
   #boardWrap{flex:1 1 auto;position:relative;min-height:0;display:flex;align-items:center;justify-content:center}
   #cv{display:block;touch-action:none;position:absolute;inset:0}
 
-  footer{flex:0 0 auto;display:flex;gap:6px;padding:6px 0 12px;align-items:center;
-         min-width:0;overflow:hidden}
-  footer .btn{padding:9px 10px;min-width:38px}
 
   /* booster bar */
   #boosters{flex:0 0 auto;display:flex;gap:10px;justify-content:center;padding:2px 0 2px}
@@ -104,7 +99,8 @@
   #loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     color:var(--dim);font-weight:700;z-index:8}
   #loading[hidden]{display:none!important}
-  .hint{color:var(--dim);font-weight:600;font-size:12px;text-align:center;padding-bottom:4px}
+  .hint{color:var(--dim);font-weight:600;font-size:12px;text-align:center;
+        padding-bottom:4px;min-height:18px}
 
   /* ---------- animated background ---------- */
   /* Lesson from MarbleSort's results card: one slowly-moving element stops a static
@@ -271,11 +267,9 @@
          border-right:1px solid rgba(255,255,255,.06);
          box-shadow:0 0 60px rgba(0,0,0,.45)}
     #lvlLabel{font-size:19px}
-    .star{width:19px;height:19px}
     .btn{height:46px;min-width:48px;font-size:16px;border-radius:14px}
-    footer .btn{min-width:46px;padding:10px 13px}
     .pill{padding:10px 17px;border-radius:16px}
-    .hint{font-size:15px;padding-bottom:8px}
+    .hint{font-size:15px;padding-bottom:8px;min-height:23px}
     #boosters{gap:16px;padding:6px 0}
     .bst{width:76px;height:68px;font-size:32px;border-radius:20px}
     .bst .cnt{min-width:24px;height:24px;font-size:14px;right:-6px;top:-8px}
@@ -363,6 +357,8 @@
     <button class="btn" id="mBack">←</button>
     <span class="mapTitle">CHỌN MÀN</span>
     <div class="spacer"></div>
+    <input id="jump" type="number" min="1" max="6740" placeholder="Màn" inputmode="numeric">
+    <button class="btn" id="btnGo">Đi</button>
     <div class="wallet">🪙 <span id="mapCoins">0</span></div>
   </div>
   <div class="chapBar">
@@ -404,18 +400,14 @@
 </div>
 
 <div id="app" hidden>
+  <!-- The row reads left to right: settings, level, coin — MarbleSort's four-control
+       HUD minus the booster, which needs a row of its own here because there are four
+       of them. Restart lives behind the gear; stars live on the map and the win card. -->
   <header>
-    <div class="pill"><span id="lvlLabel">LVL 1</span>
-      <span id="stars">
-        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
-        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
-        <svg class="star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg>
-      </span>
-    </div>
-    <div class="spacer"></div>
-    <div class="pill" style="padding:8px 12px">🪙&nbsp;<span id="hudCoins">0</span></div>
-    <button class="btn" id="btnRestart" title="Chơi lại">↻</button>
     <button class="btn" id="btnSettings" title="Tạm dừng">⏸</button>
+    <div class="pill"><span id="lvlLabel">LVL 1</span></div>
+    <div class="spacer"></div>
+    <div class="pill coinPill">🪙&nbsp;<span id="hudCoins">0</span></div>
   </header>
 
   <div id="boardWrap">
@@ -458,20 +450,13 @@
     </div>
   </div>
 
-  <div class="hint" id="hintText">Chạm vào mũi tên để cho nó bay ra ngoài</div>
+  <div class="hint" id="hintText"></div>
   <div id="boosters">
     <button class="bst" id="bHint"   title="Gợi ý — làm sáng một mũi tên đi ra được">💡<span class="cnt">0</span></button>
     <button class="bst" id="bEraser" title="Tẩy — xoá hẳn một mũi tên bất kỳ">🧽<span class="cnt">0</span></button>
     <button class="bst" id="bWand"   title="Đũa thần — thổi bay mọi mũi tên đang thoát được">✨<span class="cnt">0</span></button>
     <button class="bst" id="bScale"  title="Phóng to / thu nhỏ bàn cờ">🔍<span class="cnt inf">∞</span></button>
   </div>
-  <footer>
-    <button class="btn" id="btnPrev">←</button>
-    <input id="jump" type="number" min="1" max="6740" value="1" inputmode="numeric">
-    <button class="btn" id="btnGo">Đi</button>
-    <div class="spacer"></div>
-    <button class="btn" id="btnNext2">→</button>
-  </footer>
 </div>
 
 <script>
@@ -1049,9 +1034,7 @@ function grant(k,n){ const b=boosters(); b[k]=(b[k]||0)+n; saveBoosters(b); pain
 function setArmed(k){
   S.armed = (S.armed===k) ? null : k;
   // the original Eraser's own on-screen line is "Tap an Arrow to Remove!"
-  el('hintText').textContent = S.armed==='eraser'
-    ? 'Chạm vào mũi tên để XOÁ nó!'
-    : 'Chạm vào mũi tên để cho nó bay ra ngoài';
+  paintHint();
   paintBoosters();
 }
 /** Grid Scale — "Displays helpful grid guide lines!". Lasts the level, costs one use. */
@@ -1154,7 +1137,7 @@ function win(){
   el('winTitle').textContent = stars===3 ? 'HOÀN HẢO!' : 'HOÀN THÀNH!';
   el('winCoins').textContent = '+'+pay;
   el('winSub').textContent = `Màn ${S.num} · ${S.moves} lượt chạm${reward}`;
-  paintCoins(); paintStarsHud(S.num);
+  paintCoins();
 
   const svgs=[...el('bigStars').children];
   svgs.forEach(s=>s.classList.remove('pop','lit'));
@@ -1314,9 +1297,14 @@ function claimDaily(){
   el('hDaily').hidden=true;
   toast(`+${r.coins} 🪙`);
 }
-function paintStarsHud(n){
-  const st=(progress().stars||{})[n]||0;
-  [...document.querySelectorAll('#stars .star')].forEach((s,i)=>s.classList.toggle('off', i>=st));
+/* The line under the board only speaks when it has something to say — the level-1
+   walkthrough, or the eraser waiting for a target. Empty otherwise, and it keeps its
+   height so nothing below it jumps. */
+function defaultHint(){
+  return S.num===1 ? 'Chạm vào mũi tên để cho nó bay ra ngoài' : '';
+}
+function paintHint(){
+  el('hintText').textContent = S.armed==='eraser' ? 'Chạm vào mũi tên để XOÁ nó!' : defaultHint();
 }
 
 async function go(n){
@@ -1327,13 +1315,12 @@ async function go(n){
     S.num=n; S.lvl=lvl; S.moves=0; S.anim=null; S.shake=null; S.hintArrow=-1; S.streak=0;
     S.armed=null; S.autoQueue.length=0; S.zoom=1; S.panX=0; S.panY=0;
     S.mistakes=0; S.boostUsed=0; S.guides=false;
-    el('hintText').textContent='Chạm vào mũi tên để cho nó bay ra ngoài';
     checkUnlocks(); paintBoosters(); paintCoins();
     const d=new Set(); for(const a of lvl.arrows) for(const c of a.cells) d.add(c);
     S.dots=[...d];
     el('lvlLabel').textContent='LVL '+n;
     el('jump').value=n;
-    paintStarsHud(n);
+    paintHint();
     const p=progress(); p.last=n; saveProgress(p);
     layout();
   }catch(e){
@@ -1374,11 +1361,8 @@ cv.addEventListener('pointerup', e=>{
 });
 cv.addEventListener('pointercancel', ()=>{ ptr=null; });
 const nav = fn => (...a)=>{ SFX.ui(); SFX.musicStart(); return fn(...a); };
-el('btnRestart').onclick=nav(()=>go(S.num));
 el('btnReplay').onclick=nav(()=>go(S.num));
 el('btnNext').onclick=nav(()=>startLevel(S.num+1));
-el('btnNext2').onclick=nav(()=>startLevel(S.num+1));
-el('btnPrev').onclick=nav(()=>startLevel(S.num-1));
 el('btnGo').onclick=nav(()=>startLevel(parseInt(el('jump').value||'1',10)));
 function paintSound(){
   el('hSound').textContent = SFX.muted ? '🔇' : '🔊';
@@ -1472,9 +1456,12 @@ window.addEventListener('resize', layout);
 window.addEventListener('orientationchange', ()=>setTimeout(layout,120));
 if(window.ResizeObserver) new ResizeObserver(()=>layout()).observe(boardWrap);
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight') go(S.num+1);
-  else if(e.key==='ArrowLeft') go(S.num-1);
-  else if(e.key==='r'||e.key==='R') go(S.num);
+  if(e.target && e.target.tagName==='INPUT') return;      // typing a level number
+  if(el('app').hidden) return;                            // only while a board is up
+  if(e.key==='ArrowRight') startLevel(S.num+1);           // gated, like every other route
+  else if(e.key==='ArrowLeft') startLevel(S.num-1);
+  else if(e.key==='r'||e.key==='R') go(S.num);            // restarting is always allowed
+  else if(e.key==='Escape') el('settings').hidden=!el('settings').hidden;
 });
 
 (async function boot(){
