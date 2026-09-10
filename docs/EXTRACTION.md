@@ -12,23 +12,45 @@ Package `com.arrow.out`, version 1.8.1 (versionCode 298).
 
 ## Bộ level design
 
-**8842 object `ArrowsOutLevelData`, trong đó 6744 tên duy nhất:
-`level_1` … `level_6740` (đủ, không thiếu màn nào) + 4 màn phụ
+**8842 object `ArrowsOutLevelData`, 6744 tên duy nhất:
+`level_1` … `level_6740` + 4 màn phụ
 (`Level_13`, `Level_15`, `level_18_New`, `level_29_New`).**
 
-Tất cả 6744 màn đã được parse **khớp chính xác đến từng byte cuối cùng** (0 lỗi).
+⚠ **Số object nhiều hơn số tên là có lý do, không phải trùng lặp vô hại.** 2000 tên có từ
+2 đến 4 bản, và **1920 tên có các bản là puzzle khác hẳn nhau** (chỉ 80 tên có các bản
+trùng puzzle mà chỉ khác `LevelUId`). Chọn theo tên sẽ ra một bộ lai vô nghĩa.
+
+Thứ quyết định bản nào được dùng là 4 asset **`StarLevelDataSystem`**
+(`2kv1`, `2kv2`, `Cat3`, `Cat4`), kế thừa `MSKit.Level.BaseLevelDataSystem`:
+
+```csharp
+class BaseLevelDataSystem {
+    GameType _GameType;  int _CatalogueID;  int _rotatingLevelUID;
+    ...
+    List<ArrowsOutLevelData> _PreDefinedLevelsData;   // 6740 mục — chiến dịch chính
+    List<ArrowsOutLevelData> _RotatingLevelsData;     // 4740 mục (level_2001…6740)
+    List<ArrowsOutLevelData> _BackUpLevelsData;       //   90 mục (level_11…100)
+}
+```
+
+`_PreDefinedLevelsData` là danh sách PPtr theo đúng thứ tự chơi. Khác biệt giữa 4 danh mục:
+`2kv2` lệch `2kv1` đúng **2000 slot** (A/B test 2000 màn đầu), `Cat3` lệch 1 slot (màn 5),
+`Cat4` lệch 12 slot. Bộ đang dùng là `_PreDefinedLevelsData` của **`2kv1`**, gồm 6740 màn
+và toàn bộ đều mang `LevelUId == LevelId`.
+
+Cả 6740 màn của chiến dịch đều parse **khớp chính xác đến từng byte cuối cùng** (0 lỗi).
 
 Thống kê:
 
 | | |
 |---|---|
-| Tổng số mũi tên | 757.521 |
-| Tổng số ô đường đi | 7.355.445 |
-| Trung bình | ~112 mũi tên / màn |
-| Kích thước lưới | 5×5 (màn 1) → 71×68 |
+| Tổng số mũi tên | 784.329 |
+| Tổng số ô đường đi | 7.601.108 |
+| Trung bình | ~116 mũi tên / màn |
+| Kích thước lưới | 6×5 (màn 1) → 71×89 |
 | Cơ chế dùng trong data | **chỉ có `Simple`** |
 | Tunnel / grid object | không có màn nào dùng |
-| Màu | 52 `ArrowColorType`, 718 giá trị RGB thực tế |
+| Màu | 52 `ArrowColorType`, 717 giá trị RGB thực tế |
 
 Game *có code* cho các cơ chế `Twin`, `Bidirectional`, `Bomb`, `Golden`, `Tunnel`,
 nhưng **không màn nào trong bộ dữ liệu đóng gói sử dụng chúng** — nhiều khả năng
@@ -78,18 +100,18 @@ theo `Direction` đến mép bảng không bị mũi tên nào khác chắn.
 Thân mũi tên trượt theo đúng đường đi của chính nó (kiểu con rắn) — nó **không**
 tịnh tiến cả khối.
 
-Kiểm chứng: mô phỏng cả hai giả thuyết trên toàn bộ 6744 màn.
+Kiểm chứng: mô phỏng cả hai giả thuyết trên toàn bộ 6740 màn.
 
 | Luật | Số màn giải được |
 |---|---|
-| Tia từ ô đầu (rắn) | **6744 / 6744** |
-| Tịnh tiến cả khối | 1 / 6744 |
+| Tia từ ô đầu (rắn) | **6740 / 6740** |
+| Tịnh tiến cả khối | 1 / 6740 |
 
 ## File trong thư mục này
 
-- `levels.jsonl` (83 MB) — 1 màn / dòng, đầy đủ, `cells` là mảng index tường minh.
-- `levels_compact.jsonl` (48 MB) — như trên nhưng đường đi nén thành chuỗi
-  `p` gồm các ký tự `L/R/U/D` (bước đi từ ô đầu). 37 mũi tên (trên tổng 757.521)
+- `levels.jsonl` (86 MB) — 1 màn / dòng, đầy đủ, `cells` là mảng index tường minh.
+- `levels_compact.jsonl` (49 MB) — như trên nhưng đường đi nén thành chuỗi
+  `p` gồm các ký tự `L/R/U/D` (bước đi từ ô đầu). 36 mũi tên (trên tổng 784.329)
   có đường đi bị đứt đoạn trong dữ liệu gốc → những mũi tên đó giữ `cells` tường minh.
 
 Bảng màu chuẩn (`ArrowColorType` → RGB) — trích từ chính dữ liệu màn chơi:

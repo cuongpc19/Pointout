@@ -1,7 +1,8 @@
 # Point Out — Color Escape (HTML5)
 
 Bản làm lại bằng HTML5 của game **Point Out: Color Escape Puzzle** (`com.arrow.out`),
-chơi được **toàn bộ 6740 màn** trích trực tiếp từ APK gốc.
+chơi được **toàn bộ 6740 màn** trích trực tiếp từ APK gốc, đúng theo danh mục
+chiến dịch mà game thật dùng (xem *Chọn đúng bộ level* bên dưới).
 
 Không dùng framework, không cần build. Mở là chơi.
 
@@ -24,6 +25,28 @@ thì nó trượt ra ngoài theo chính đường đi của mình. Bị chắn t
 
 Luật này được kiểm chứng bằng mô phỏng trên cả 6740 màn: **6740/6740 giải được**,
 trong khi giả thuyết "tịnh tiến cả khối" chỉ giải được 1 màn.
+
+## Chọn đúng bộ level
+
+APK chứa **8842** asset `ArrowsOutLevelData` nhưng chỉ **6744** tên duy nhất — 2000 tên
+có nhiều bản, và 1920 trong số đó là **puzzle khác hẳn nhau**, không phải bản sao.
+Lấy bừa theo tên sẽ ra một bộ lai.
+
+Thứ quyết định là 4 asset `StarLevelDataSystem` (`2kv1`, `2kv2`, `Cat3`, `Cat4`).
+Mỗi cái là một danh mục, kế thừa `BaseLevelDataSystem` với ba danh sách:
+
+| Danh sách | Nội dung |
+|---|---|
+| `_PreDefinedLevelsData` | **6740 mục, level_1…level_6740 đúng thứ tự — chiến dịch chính** |
+| `_RotatingLevelsData` | 4740 mục (level_2001…6740) |
+| `_BackUpLevelsData` | 90 mục (level_11…100) |
+
+Bốn danh mục khác nhau ở: `2kv2` khác `2kv1` đúng **2000 slot** (màn 1–2000 — A/B test
+của 2000 màn đầu, đúng như tên gọi), `Cat3` khác 1 slot, `Cat4` khác 12 slot.
+
+Bản này dùng `_PreDefinedLevelsData` của **`2kv1`**. Kiểm chứng: màn 1 của bộ này là lưới
+6×5 với 4 mũi tên — hai xanh đầu quay xuống ở hai bên, hai vàng đầu quay lên ở giữa —
+**khớp từng nét với video quay từ game thật**.
 
 ## Nội dung
 
