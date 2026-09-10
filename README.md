@@ -8,7 +8,7 @@ Không dùng framework, không cần build. Mở là chơi.
 ## Chơi thử
 
 ```bash
-npm start          # http://localhost:5173
+npm start          # http://localhost:5273
 # hoặc
 node server.js 8080
 ```

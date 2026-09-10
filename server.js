@@ -5,7 +5,7 @@
  * Deliberately no framework and no node_modules: the game is plain static files, and a dev
  * server that needs an install is one more thing that can be broken on a fresh clone.
  *
- *   node server.js            -> http://localhost:5173
+ *   node server.js            -> http://localhost:5273
  *   node server.js 8080       -> http://localhost:8080
  */
 const http = require("http");
@@ -13,7 +13,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = __dirname;
-const PORT = Number(process.argv[2] || process.env.PORT || 5173);
+const PORT = Number(process.argv[2] || process.env.PORT || 5273);
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
