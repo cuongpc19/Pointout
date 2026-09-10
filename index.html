@@ -47,6 +47,8 @@
        font-size:24px;cursor:pointer;padding:0;line-height:1}
   .bst:active{transform:scale(.93)}
   .bst.armed{border-color:var(--accent);background:var(--panel2)}
+  .bst .bico{width:68%;height:68%;display:block;pointer-events:none;object-fit:contain;
+       filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
   .bst.empty{opacity:.45}
   .bst.locked{opacity:.35;filter:grayscale(1)}
   .bst.locked .cnt{background:#4e6273;color:#c9d2e8;font-size:10px}
@@ -54,7 +56,6 @@
        border-radius:999px;min-width:20px;height:20px;font-size:12px;font-weight:800;
        display:flex;align-items:center;justify-content:center;padding:0 5px;
        border:2px solid var(--bg)}
-  .bst .cnt.inf{background:#4e6273;color:#e8ecf8}
 
   /* tutorial hand (level 1) */
   #hand{position:absolute;left:0;top:0;width:56px;height:56px;pointer-events:none;
@@ -261,7 +262,7 @@
      play area gets a visible stage and the type and buttons grow with it. */
   @media (min-width:760px){
     body{font-size:16px}
-    #app{max-width:660px;padding:0 18px;
+    #app{max-width:760px;padding:0 18px;
          background:linear-gradient(180deg, rgba(32,40,68,.55), rgba(20,25,44,.55));
          border-left:1px solid rgba(255,255,255,.06);
          border-right:1px solid rgba(255,255,255,.06);
@@ -302,6 +303,16 @@
     .cta{font-size:23px;padding:16px 48px;border-radius:22px}
     .cta small{font-size:14px}
     .wallet{font-size:17px;padding:9px 18px}
+  }
+
+  /* A 1900px window was giving the board a 660px strip and leaving the rest empty.
+     Past this the column takes the width it can actually use, so the board is limited
+     by the window's height instead of by a phone-shaped container. */
+  @media (min-width:1100px){
+    #app{max-width:min(92vw,1080px)}
+    .bst{width:92px;height:82px;font-size:38px;border-radius:22px}
+    .bst .cnt{min-width:26px;height:26px;font-size:15px}
+    #boosters{gap:20px}
   }
   /* landscape home: art and column side by side, as one centred group.
      1.15 rather than 1.0 — a nearly-square window has no room for a column
@@ -452,10 +463,50 @@
 
   <div class="hint" id="hintText"></div>
   <div id="boosters">
-    <button class="bst" id="bHint"   title="Gợi ý — làm sáng một mũi tên đi ra được">💡<span class="cnt">0</span></button>
-    <button class="bst" id="bEraser" title="Tẩy — xoá hẳn một mũi tên bất kỳ">🧽<span class="cnt">0</span></button>
-    <button class="bst" id="bWand"   title="Đũa thần — thổi bay mọi mũi tên đang thoát được">✨<span class="cnt">0</span></button>
-    <button class="bst" id="bScale"  title="Phóng to / thu nhỏ bàn cờ">🔍<span class="cnt inf">∞</span></button>
+    <button class="bst" id="bHint" title="Gợi ý — làm sáng một mũi tên đi ra được">
+      <img class="bico" src="art/hint.png" alt=""><span class="cnt">0</span></button>
+    <button class="bst" id="bEraser" title="Tẩy — xoá hẳn một mũi tên bất kỳ">
+      <svg class="bico" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="erP" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffa8c4"/><stop offset="1" stop-color="#e04a76"/></linearGradient>
+          <linearGradient id="erB" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#9adcff"/><stop offset="1" stop-color="#3f8fd6"/></linearGradient>
+        </defs>
+        <g transform="rotate(-24 32 32)" stroke="#22162e" stroke-width="3.2" stroke-linejoin="round">
+          <rect x="18" y="9" width="28" height="46" rx="7" fill="url(#erP)"/>
+          <path d="M18 38h28v10a7 7 0 0 1-7 7H25a7 7 0 0 1-7-7z" fill="url(#erB)"/>
+          <rect x="23.5" y="14" width="7" height="20" rx="3.5" fill="#fff" opacity=".5" stroke="none"/>
+        </g>
+      </svg><span class="cnt">0</span></button>
+    <button class="bst" id="bWand" title="Đũa thần — thổi bay mọi mũi tên đang thoát được">
+      <svg class="bico" viewBox="0 0 64 64" aria-hidden="true">
+        <defs>
+          <linearGradient id="wdS" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#ffe98a"/><stop offset="1" stop-color="#f2a516"/></linearGradient>
+          <linearGradient id="wdH" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#b9803c"/><stop offset="1" stop-color="#8a5a2c"/></linearGradient>
+        </defs>
+        <g stroke="#22162e" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M13 54 L34 33" stroke-width="10"/>
+          <path d="M13 54 L34 33" stroke="#a9712f" stroke-width="6.5"/>
+          <path d="M42 8 l5.6 11.9 13.1 1.8 -9.5 9.2 2.3 13 -11.5-6.1 -11.5 6.1 2.3-13 -9.5-9.2 13.1-1.8 z"
+                fill="url(#wdS)"/>
+          <circle cx="36" cy="20" r="3.4" fill="#fff" opacity=".55" stroke="none"/>
+        </g>
+      </svg><span class="cnt">0</span></button>
+    <button class="bst" id="bScale" title="Kẻ lưới — hiện đường kẻ trợ giúp">
+      <svg class="bico" viewBox="0 0 64 64" aria-hidden="true">
+        <defs><linearGradient id="gsB" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8ff0ff"/><stop offset="1" stop-color="#22a8c8"/></linearGradient></defs>
+        <g stroke="#22162e" stroke-width="3.2" stroke-linejoin="round">
+          <rect x="9" y="9" width="46" height="46" rx="9" fill="url(#gsB)"/>
+          <g stroke="#12586e" stroke-width="3" opacity=".65">
+            <path d="M24.3 11v42M39.7 11v42M11 24.3h42M11 39.7h42"/>
+          </g>
+          <rect x="14" y="14" width="15" height="7" rx="3.5" fill="#fff" opacity=".45" stroke="none"/>
+        </g>
+      </svg><span class="cnt">0</span></button>
   </div>
 </div>
 
@@ -576,7 +627,9 @@ function layout(){
   if(!S.lvl) return;
   const pad = 18;
   // the original keeps small boards small instead of blowing them up to fill the screen
-  const maxCell = Math.max(18, Math.min(w, h) / 11);
+  // /11 keeps a 5x5 tutorial board small like the original; a roomy desktop window
+  // can afford a slightly larger ceiling before that rule starts wasting the screen.
+  const maxCell = Math.max(18, Math.min(w, h) / (w >= 900 ? 9.5 : 11));
   const fit = Math.min((w-2*pad)/S.lvl.X, (h-2*pad)/S.lvl.Y, maxCell);
   S.cell = fit * S.zoom;
   const bw = S.cell*S.lvl.X, bh = S.cell*S.lvl.Y;
