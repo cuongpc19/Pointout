@@ -139,18 +139,33 @@
     #bgfx .rays,#bgfx .blob{animation:none}
   }
 
-  /* ---------- home screen ---------- */
-  #home{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;
-        align-items:center;justify-content:center;gap:14px;padding:24px 20px;text-align:center}
+  /* ---------- home screen ----------
+     Home is the one screen with no board on it, so it is the one screen allowed to go
+     landscape: past WIDE the art and the button column become a single centred group
+     and the slack lands in the outside margins as framing (MarbleSort's HomeScene). */
+  #home{position:fixed;inset:0;z-index:20;display:flex;align-items:center;
+        justify-content:center;padding:20px;text-align:center}
   #home[hidden]{display:none!important}
-  .logo{font-size:clamp(34px,11vw,54px);font-weight:900;letter-spacing:1px;line-height:.95;
+  .homeWrap{display:flex;flex-direction:column;align-items:center;gap:18px;
+        width:100%;max-width:420px}
+  .homeCol{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
+  .logo{font-size:clamp(36px,12vw,56px);font-weight:900;letter-spacing:1px;line-height:.95;
         color:#fff;text-shadow:0 4px 0 #0d1120,0 0 26px rgba(255,195,21,.25)}
   .logo em{font-style:normal;color:var(--accent)}
   .tagline{color:var(--dim);font-weight:700;letter-spacing:3px;font-size:12px;
-        text-transform:uppercase;margin-top:-4px}
-  #heroCv{width:min(64vw,240px);height:min(64vw,240px);display:block;
-        animation:bob 4.5s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-10px) rotate(1.2deg)}}
+        text-transform:uppercase;margin-top:-10px}
+  .progLine{color:var(--dim);font-weight:700;font-size:13px;display:flex;gap:12px;
+        align-items:center;justify-content:center;flex-wrap:wrap}
+  .progLine b{color:var(--text);font-weight:900}
+  /* the art is the cover: it gets a real frame and a glow rather than floating */
+  .heroBox{position:relative;flex:0 0 auto;border-radius:28px;padding:10px;
+        background:linear-gradient(160deg, rgba(70,90,150,.30), rgba(20,26,48,.30));
+        box-shadow:0 18px 50px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.07);
+        animation:bob 5s ease-in-out infinite}
+  .heroBox::after{content:"";position:absolute;inset:-14%;border-radius:50%;z-index:-1;
+        background:radial-gradient(closest-side, rgba(120,150,255,.22), transparent 70%)}
+  #heroCv{width:min(70vw,300px);height:min(70vw,300px);display:block}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
   .cta{background:linear-gradient(#ffd54a,#f4a91b);color:#3a2b00;border:0;
        border-radius:20px;padding:14px 40px;font:inherit;font-weight:900;font-size:20px;
        letter-spacing:1px;cursor:pointer;box-shadow:0 6px 0 #b97c07,0 10px 20px rgba(0,0,0,.35)}
@@ -191,7 +206,11 @@
   .mapTitle{font-weight:900;font-size:17px;letter-spacing:.5px}
   .chapBar{display:flex;align-items:center;justify-content:center;gap:10px;
        background:rgba(20,24,39,.6);border-radius:14px;padding:7px 10px}
-  .chapBar b{font-weight:900;font-size:15px;min-width:120px;text-align:center}
+  .chapBar b{font-weight:900;font-size:15px;min-width:120px;text-align:center;
+       display:flex;flex-direction:column;line-height:1.25}
+  .chapBar b span{font-weight:700;font-size:11px;color:var(--dim)}
+  .chapStars{display:flex;align-items:center;gap:5px;font-weight:800;font-size:13px;
+       color:var(--accent)}
   #mapGrid{flex:1 1 auto;min-height:0;overflow-y:auto;display:grid;gap:9px;
        grid-template-columns:repeat(auto-fill,minmax(62px,1fr));
        align-content:start;padding:2px 2px 10px;-webkit-overflow-scrolling:touch}
@@ -273,22 +292,43 @@
     .lineBtn{font-size:16px;padding:14px 16px}
     /* the map is a full-screen layer; centre its rows so it reads as the same
        column as the board instead of a grid stretched across the monitor */
-    #map>*{width:100%;max-width:760px;margin-left:auto;margin-right:auto}
-    #map{padding:14px 18px 18px}
-    #mapGrid{grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:11px}
+    #map>*{width:100%;max-width:940px;margin-left:auto;margin-right:auto}
+    #map{padding:16px 20px 20px;gap:14px}
+    #mapGrid{grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:12px}
+    .chapBar{padding:10px 14px}
+    .chapBar b{font-size:18px;min-width:150px}
+    .chapBar b span{font-size:12px}
+    .chapStars{font-size:16px}
     .tile{font-size:17px;border-radius:16px}
     .mapTitle{font-size:20px}
     .chapBar b{font-size:17px;min-width:150px}
     .logo{font-size:64px}
     .tagline{font-size:14px;letter-spacing:4px}
-    #heroCv{width:300px;height:300px}
+    .progLine{font-size:15px}
     .cta{font-size:23px;padding:16px 48px;border-radius:22px}
     .cta small{font-size:14px}
     .wallet{font-size:17px;padding:9px 18px}
   }
-  @media (min-width:760px) and (max-height:820px){
-    #heroCv{width:220px;height:220px}
-    .logo{font-size:50px}
+  /* landscape home: art and column side by side, as one centred group.
+     1.15 rather than 1.0 — a nearly-square window has no room for a column
+     beside a square cover. */
+  @media (min-aspect-ratio:115/100) and (min-width:820px){
+    .homeWrap{flex-direction:row;gap:min(6vw,64px);max-width:none;width:auto;
+              align-items:center}
+    /* the art drives the size; the column is capped just under it so the pair
+       reads as one block instead of drifting apart on a 21:9 monitor */
+    #heroCv{width:min(46vh,380px);height:min(46vh,380px)}
+    /* stretch so the CTA spans the column, but the pill-shaped wallet keeps its
+       own width and stays on the column's centre line */
+    .homeCol{width:min(44vh,360px);align-items:stretch;text-align:center}
+    .homeCol .wallet{align-self:center}
+    .logo{font-size:min(7.2vh,60px)}
+    .heroBox{animation-duration:6s}
+  }
+  @media (min-aspect-ratio:115/100) and (min-width:820px) and (max-height:620px){
+    #heroCv{width:min(52vh,300px);height:min(52vh,300px)}
+    .homeCol{width:min(50vh,290px)}
+    .homeWrap{gap:36px}
   }
 </style>
 </head>
@@ -300,17 +340,22 @@
 </div>
 
 <div id="home" hidden>
-  <div class="logo">POINT <em>OUT</em></div>
-  <div class="tagline">Color Escape</div>
-  <canvas id="heroCv" width="480" height="480"></canvas>
-  <button class="cta" id="btnPlay">CHƠI<small id="playSub">Màn 1</small></button>
-  <div class="row">
-    <button class="btn" id="hMusic" title="Nhạc nền">🎵</button>
-    <button class="btn" id="hSound" title="Âm thanh">🔊</button>
-    <button class="btn" id="hPick" title="Chọn màn">🗺️ Chọn màn</button>
-    <button class="btn" id="hDaily" title="Quà mỗi ngày" hidden>🎁</button>
+  <div class="homeWrap">
+    <div class="heroBox"><canvas id="heroCv" width="620" height="620"></canvas></div>
+    <div class="homeCol">
+      <div class="logo">POINT <em>OUT</em></div>
+      <div class="tagline">Color Escape</div>
+      <div class="progLine" id="progLine"></div>
+      <button class="cta" id="btnPlay">CHƠI<small id="playSub">Màn 1</small></button>
+      <div class="row">
+        <button class="btn" id="hMusic" title="Nhạc nền">🎵</button>
+        <button class="btn" id="hSound" title="Âm thanh">🔊</button>
+        <button class="btn" id="hPick" title="Chọn màn">🗺️ Chọn màn</button>
+        <button class="btn" id="hDaily" title="Quà mỗi ngày" hidden>🎁</button>
+      </div>
+      <div class="wallet">🪙 <span id="homeCoins">0</span></div>
+    </div>
   </div>
-  <div class="wallet">🪙 <span id="homeCoins">0</span></div>
 </div>
 
 <div id="map" hidden>
@@ -323,6 +368,7 @@
   <div class="chapBar">
     <button class="btn" id="mPrev">←</button>
     <b id="mChap">Chương 1</b>
+    <div class="chapStars" id="mStars"></div>
     <button class="btn" id="mNext">→</button>
   </div>
   <div id="mapGrid"></div>
@@ -1159,8 +1205,15 @@ function showScreen(name){
 }
 function showHome(){
   showScreen('home'); el('winOverlay').hidden=true;
-  el('playSub').textContent='Màn '+(progress().last||1);
+  const p=progress();
+  el('playSub').textContent='Màn '+(p.last||1);
   el('hDaily').hidden = !dailyReady();
+  const st=p.stars||{};
+  let total=0, done=0;
+  for(const k in st){ total+=st[k]; if(st[k]>0) done++; }
+  el('progLine').innerHTML = done
+    ? `<span>Đã qua <b>${done}</b>/${PO.meta.maxLevel} màn</span><span>⭐ <b>${total}</b></span>`
+    : `<span>${PO.meta.maxLevel} màn đang chờ bạn</span>`;
   paintCoins(); paintSound(); drawHero();
 }
 /* The progression gate lives here, not in go(): go() is "load and show this level"
@@ -1188,7 +1241,9 @@ function paintMap(){
   const chaps=Math.ceil(PO.meta.maxLevel/CHAP);
   chap=Math.max(0,Math.min(chaps-1,chap));
   const lo=chap*CHAP+1, hi=Math.min(PO.meta.maxLevel, lo+CHAP-1);
-  el('mChap').textContent=`Chương ${chap+1} · ${lo}–${hi}`;
+  el('mChap').innerHTML=`Chương ${chap+1}<span>Màn ${lo}–${hi}</span>`;
+  let got=0; for(let n=lo;n<=hi;n++) got+=stars[n]||0;
+  el('mStars').innerHTML=`⭐ ${got}<span style="color:var(--dim);font-weight:700">/${(hi-lo+1)*3}</span>`;
   el('mPrev').disabled = chap===0;
   el('mNext').disabled = chap>=chaps-1;
   el('mapCoins').textContent=coins();
