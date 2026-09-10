@@ -137,64 +137,58 @@
   }
 
   /* ---------- home screen ----------
-     Home is the one screen with no board on it, so it is the one screen allowed to go
-     landscape: past WIDE the art and the button column become a single centred group
-     and the slack lands in the outside margins as framing (MarbleSort's HomeScene). */
+     Ball Sort's desktop shape: title + art on one side, the level button and the
+     counters on the other, as one centred group. Home is the one screen with no
+     board on it, so it is the one screen allowed to go landscape. */
   #home{position:fixed;inset:0;z-index:20;display:flex;align-items:center;
-        justify-content:center;padding:20px;text-align:center}
+        justify-content:center;padding:24px;text-align:center}
   #home[hidden]{display:none!important}
-  .homeWrap{display:flex;flex-direction:column;align-items:center;gap:18px;
+  .homeWrap{display:flex;flex-direction:column;align-items:center;gap:22px;
         width:100%;max-width:420px}
-  .homeCol{display:flex;flex-direction:column;align-items:center;gap:14px;width:100%}
-  .logo{font-size:clamp(36px,12vw,56px);font-weight:900;letter-spacing:1px;line-height:.95;
-        color:#fff;text-shadow:0 4px 0 #0d1120,0 0 26px rgba(255,195,21,.25)}
+  .homeArt{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .homeCol{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%}
+
+  .logo{font-size:clamp(38px,13vw,60px);font-weight:900;letter-spacing:1px;line-height:.95;
+        color:#fff;text-shadow:0 5px 0 #0d1120,0 0 30px rgba(255,195,21,.22)}
   .logo em{font-style:normal;color:var(--accent)}
-  .tagline{color:var(--dim);font-weight:700;letter-spacing:3px;font-size:12px;
-        text-transform:uppercase;margin-top:-10px}
-  .progLine{color:var(--dim);font-weight:700;font-size:13px;display:flex;gap:12px;
-        align-items:center;justify-content:center;flex-wrap:wrap}
-  .progLine b{color:var(--text);font-weight:900}
-  /* the art is the cover: it gets a real frame and a glow rather than floating */
+  .tagline{color:var(--dim);font-weight:700;letter-spacing:4px;font-size:12px;
+        text-transform:uppercase;margin-top:-6px;margin-bottom:14px}
+
   .heroBox{position:relative;flex:0 0 auto;border-radius:28px;padding:10px;
         background:linear-gradient(160deg, rgba(70,90,150,.30), rgba(20,26,48,.30));
         box-shadow:0 18px 50px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.07);
         animation:bob 5s ease-in-out infinite}
   .heroBox::after{content:"";position:absolute;inset:-14%;border-radius:50%;z-index:-1;
         background:radial-gradient(closest-side, rgba(120,150,255,.22), transparent 70%)}
-  #heroCv{width:min(70vw,300px);height:min(70vw,300px);display:block}
+  #heroCv{width:min(66vw,270px);height:min(66vw,270px);display:block}
   @keyframes bob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-9px) rotate(1deg)}}
-  .cta{background:linear-gradient(#ffd54a,#f4a91b);color:#3a2b00;border:0;
-       border-radius:20px;padding:14px 40px;font:inherit;font-weight:900;font-size:20px;
-       letter-spacing:1px;cursor:pointer;box-shadow:0 6px 0 #b97c07,0 10px 20px rgba(0,0,0,.35)}
-  .cta:active{transform:translateY(3px);box-shadow:0 3px 0 #b97c07,0 6px 12px rgba(0,0,0,.35)}
-  .cta small{display:block;font-size:12px;font-weight:800;opacity:.75;letter-spacing:.5px}
-  .wallet{display:inline-flex;align-items:center;gap:7px;background:rgba(20,24,39,.66);
-       border-radius:999px;padding:7px 15px;font-weight:800;font-size:15px}
-  #home .row{gap:12px}
 
-  /* ---------- level-complete card ---------- */
-  #winOverlay{background:rgba(9,11,24,.8)}
-  .card{position:relative;width:min(340px,92%);border-radius:26px;overflow:hidden;
-        background:var(--panel);box-shadow:0 18px 44px rgba(0,0,0,.55);
-        animation:cardIn .38s cubic-bezier(.2,1.5,.45,1) both}
-  @keyframes cardIn{from{transform:scale(.7) translateY(24px);opacity:0}to{transform:none;opacity:1}}
-  .card .band{background:#3fbf62;padding:15px 16px;font-size:21px;font-weight:900;
-        color:#fff;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,.22)}
-  .card .body{padding:16px 18px 20px;display:flex;flex-direction:column;
-        align-items:center;gap:12px}
-  .cardRays{position:absolute;left:50%;top:34%;width:520px;height:520px;margin-left:-260px;
-        margin-top:-260px;opacity:.32;pointer-events:none;animation:spin 26s linear infinite;
-        background:repeating-conic-gradient(from 0deg,rgba(255,215,94,.5) 0deg 6deg,transparent 6deg 20deg);
-        mask-image:radial-gradient(closest-side,#000 30%,transparent 72%);
-        -webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 72%)}
-  .bigStars{display:flex;align-items:center;justify-content:center;gap:8px;height:62px}
-  .bigStars svg{width:44px;height:44px;color:#3b4467;transform:scale(0)}
-  .bigStars svg.mid{width:56px;height:56px;margin-top:-10px}
-  .bigStars svg.lit{color:var(--accent);filter:drop-shadow(0 0 10px rgba(255,195,21,.6))}
-  .bigStars svg.pop{animation:starPop .34s cubic-bezier(.2,1.7,.5,1) forwards}
-  @keyframes starPop{from{transform:scale(.1) rotate(-40deg)}to{transform:scale(1) rotate(0)}}
-  .reward{display:flex;align-items:center;gap:8px;font-weight:900;font-size:19px;color:#ffd964}
-  .cardSub{color:var(--dim);font-weight:700;font-size:13px}
+  /* the level button is the screen's one job — green, wide, and it says where you are */
+  .cta{background:linear-gradient(#5fd472,#33a94d);color:#fff;border:0;width:100%;
+       border-radius:22px;padding:18px 30px;font:inherit;font-weight:900;font-size:26px;
+       letter-spacing:1.5px;cursor:pointer;text-shadow:0 2px 0 rgba(0,0,0,.28);
+       box-shadow:0 7px 0 #22803a, 0 12px 24px rgba(0,0,0,.4);
+       border-top:2px solid rgba(255,255,255,.4)}
+  .cta:active{transform:translateY(4px);box-shadow:0 3px 0 #22803a,0 6px 14px rgba(0,0,0,.4)}
+
+  .stats{display:flex;gap:26px;align-items:center;justify-content:center}
+  .stat{display:flex;align-items:center;gap:9px;font-weight:900;font-size:22px;color:#fff}
+  .sIco{width:28px;height:28px;flex:0 0 auto;display:block}
+  .sIco.star{color:var(--accent);filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+  .sIco.coin{border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe27a,#f0a91b 70%);
+       box-shadow:0 2px 2px rgba(0,0,0,.4), inset 0 0 0 2px rgba(255,255,255,.35)}
+  .btn.wide{width:100%;justify-content:center}
+
+  /* audio toggles live in the corner, off the layout entirely */
+  .homeCorner{position:absolute;top:16px;right:16px;display:flex;gap:8px;z-index:2}
+  .cbtn{width:44px;height:44px;border:0;border-radius:14px;background:var(--panel);
+       color:var(--text);font-size:19px;cursor:pointer;display:flex;align-items:center;
+       justify-content:center;box-shadow:0 3px 0 rgba(0,0,0,.35)}
+  .cbtn:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+
+  .buildLine{position:absolute;left:0;right:0;bottom:14px;text-align:center;
+       color:var(--dim);opacity:.5;font-size:11px;font-weight:700;letter-spacing:.5px}
+
   /* ---------- level map ---------- */
   #map{position:fixed;inset:0;z-index:19;display:flex;flex-direction:column;
        padding:10px 12px 14px;gap:10px}
@@ -297,12 +291,13 @@
     .tile{font-size:17px;border-radius:16px}
     .mapTitle{font-size:20px}
     .chapBar b{font-size:17px;min-width:150px}
-    .logo{font-size:64px}
-    .tagline{font-size:14px;letter-spacing:4px}
-    .progLine{font-size:15px}
-    .cta{font-size:23px;padding:16px 48px;border-radius:22px}
-    .cta small{font-size:14px}
-    .wallet{font-size:17px;padding:9px 18px}
+    .logo{font-size:66px}
+    .tagline{font-size:14px;letter-spacing:5px}
+    .cta{font-size:30px;padding:20px 34px}
+    .stat{font-size:26px}
+    .sIco{width:32px;height:32px}
+    .cbtn{width:50px;height:50px;font-size:21px}
+    .buildLine{font-size:12px;bottom:18px}
   }
 
   /* A 1900px window was giving the board a 660px strip and leaving the rest empty.
@@ -318,23 +313,22 @@
      1.15 rather than 1.0 — a nearly-square window has no room for a column
      beside a square cover. */
   @media (min-aspect-ratio:115/100) and (min-width:820px){
-    .homeWrap{flex-direction:row;gap:min(6vw,64px);max-width:none;width:auto;
+    .homeWrap{flex-direction:row;gap:min(8vw,90px);max-width:none;width:auto;
               align-items:center}
     /* the art drives the size; the column is capped just under it so the pair
        reads as one block instead of drifting apart on a 21:9 monitor */
-    #heroCv{width:min(46vh,380px);height:min(46vh,380px)}
-    /* stretch so the CTA spans the column, but the pill-shaped wallet keeps its
-       own width and stays on the column's centre line */
-    .homeCol{width:min(44vh,360px);align-items:stretch;text-align:center}
-    .homeCol .wallet{align-self:center}
-    .logo{font-size:min(7.2vh,60px)}
+    #heroCv{width:min(40vh,330px);height:min(40vh,330px)}
+    .homeCol{width:min(42vh,340px)}
+    .logo{font-size:min(7.4vh,62px)}
     .heroBox{animation-duration:6s}
   }
-  @media (min-aspect-ratio:115/100) and (min-width:820px) and (max-height:620px){
-    #heroCv{width:min(52vh,300px);height:min(52vh,300px)}
-    .homeCol{width:min(50vh,290px)}
-    .homeWrap{gap:36px}
+  @media (min-aspect-ratio:115/100) and (min-width:820px) and (max-height:640px){
+    #heroCv{width:min(46vh,250px);height:min(46vh,250px)}
+    .homeCol{width:min(48vh,280px)}
+    .homeWrap{gap:44px}
+    .logo{font-size:min(8vh,46px)}
   }
+
 </style>
 </head>
 <body>
@@ -345,22 +339,30 @@
 </div>
 
 <div id="home" hidden>
+  <!-- Ball Sort's desktop home: title and art on the left, the level button and the
+       counters on the right, the audio toggles floating in the corner, and a dim
+       build line at the foot. Nothing else on the screen. -->
+  <div class="homeCorner">
+    <button class="cbtn" id="hDaily" title="Quà mỗi ngày" hidden>🎁</button>
+    <button class="cbtn" id="hMusic" title="Nhạc nền">🎵</button>
+    <button class="cbtn" id="hSound" title="Âm thanh">🔊</button>
+  </div>
   <div class="homeWrap">
-    <div class="heroBox"><canvas id="heroCv" width="620" height="620"></canvas></div>
-    <div class="homeCol">
+    <div class="homeArt">
       <div class="logo">POINT <em>OUT</em></div>
       <div class="tagline">Color Escape</div>
-      <div class="progLine" id="progLine"></div>
-      <button class="cta" id="btnPlay">CHƠI<small id="playSub">Màn 1</small></button>
-      <div class="row">
-        <button class="btn" id="hMusic" title="Nhạc nền">🎵</button>
-        <button class="btn" id="hSound" title="Âm thanh">🔊</button>
-        <button class="btn" id="hPick" title="Chọn màn">🗺️ Chọn màn</button>
-        <button class="btn" id="hDaily" title="Quà mỗi ngày" hidden>🎁</button>
+      <div class="heroBox"><canvas id="heroCv" width="620" height="620"></canvas></div>
+    </div>
+    <div class="homeCol">
+      <button class="cta" id="btnPlay"><span id="playSub">MÀN 1</span></button>
+      <div class="stats">
+        <span class="stat"><svg viewBox="0 0 24 24" fill="currentColor" class="sIco star"><path d="M12 2l3 6.6 7 .8-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.8z"/></svg><b id="homeStars">0</b></span>
+        <span class="stat"><span class="sIco coin"></span><b id="homeCoins">0</b></span>
       </div>
-      <div class="wallet">🪙 <span id="homeCoins">0</span></div>
+      <button class="btn wide" id="hPick">🗺️ Chọn màn</button>
     </div>
   </div>
+  <div class="buildLine" id="buildLine"></div>
 </div>
 
 <div id="map" hidden>
@@ -1242,18 +1244,14 @@ function showScreen(name){
 function showHome(){
   showScreen('home'); el('winOverlay').hidden=true;
   const p=progress();
-  el('playSub').textContent='Màn '+(p.last||1);
+  el('playSub').textContent = 'MÀN ' + (p.last||1);
   el('hDaily').hidden = !dailyReady();
   const st=p.stars||{};
-  let total=0, done=0;
-  for(const k in st){ total+=st[k]; if(st[k]>0) done++; }
-  el('progLine').innerHTML = done
-    ? `<span>Đã qua <b>${done}</b>/${PO.meta.maxLevel} màn</span><span>⭐ <b>${total}</b></span>`
-    : `<span>${PO.meta.maxLevel} màn đang chờ bạn</span>`;
+  let total=0; for(const k in st) total+=st[k];
+  el('homeStars').textContent = total;
+  el('buildLine').textContent = `v1.0 · ${PO.meta.maxLevel} màn`;
   paintCoins(); paintSound(); drawHero();
 }
-/* The progression gate lives here, not in go(): go() is "load and show this level"
-   and is also what the map, the win card and the tests drive directly. */
 function startLevel(n){
   n=Math.max(1,Math.min(PO.meta.maxLevel, n|0));
   const top=unlockedMax();
